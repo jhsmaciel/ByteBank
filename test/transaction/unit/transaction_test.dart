@@ -1,0 +1,13 @@
+
+import 'package:bytebanksqlite/model/Transaction.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test("Should return value when created a transaction.", () {
+    final transaction = Transaction(null, 200, null);
+    expect(transaction.value, 200);
+  });
+  test("Should fail when create transaction with value less than zero", () {
+    expect(() => Transaction(null, 0, null), throwsAssertionError);
+  });
+}

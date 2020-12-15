@@ -1,31 +1,37 @@
-import 'package:bytebanksqlite/api/apis/TransactionApi.dart';
-import 'package:bytebanksqlite/component/TransactionAuthDialog.dart';
 import 'package:bytebanksqlite/screen/Dashboard.dart';
+import 'package:bytebanksqlite/theme/themes.dart';
+import 'package:bytebanksqlite/widget/AppDependecies.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'api/apis/TransactionApi.dart';
+import 'dao/ContactDAO.dart';
+
 void main() {
-  runApp(BytebankApp());
+  runApp(BytebankApp(
+    transactionApi: TransactionApi(),
+    contactDAO: ContactDAO(),
+  ));
 }
 
 class BytebankApp extends StatelessWidget {
+  final ContactDAO contactDAO;
+  final TransactionApi transactionApi;
+
+  const BytebankApp(
+      {Key key, @required this.contactDAO, @required this.transactionApi})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        buttonTheme: ButtonThemeData(
-          buttonColor: Colors.white,
-          textTheme: ButtonTextTheme.primary,
-        ),
-        accentColor: Colors.white,
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
+    return AppDependecies(
+      transactionApi: transactionApi,
+      contactDAO: contactDAO,
+      child: MaterialApp(
+        themeMode: ThemeMode.dark,
+        darkTheme: darkTheme,
+        home: Dashboard(),
       ),
-      home: Dashboard(),
     );
   }
 }

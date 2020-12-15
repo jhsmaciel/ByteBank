@@ -4,19 +4,26 @@ import 'package:bytebanksqlite/model/Contact.dart';
 import 'package:bytebanksqlite/screen/Constants.dart';
 import 'package:bytebanksqlite/screen/Contacts/ContactsForm.dart';
 import 'package:bytebanksqlite/screen/Transaction/TransactionForm.dart';
+import 'package:bytebanksqlite/widget/AppDependecies.dart';
 import 'package:flutter/material.dart';
 
-class Contacts extends StatelessWidget {
-  final ContactDAO _contactDAO = ContactDAO();
+class Contacts extends StatefulWidget {
 
   @override
+  _ContactsState createState() => _ContactsState();
+}
+
+class _ContactsState extends State<Contacts> {
+  @override
   Widget build(BuildContext context) {
+    final dependecies = AppDependecies.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(Transfer),
       ),
       body: FutureBuilder<List<Contact>>(
-        future: _contactDAO.findAll(),
+        future: dependecies.contactDAO.findAll(),
         initialData: [],
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
@@ -33,7 +40,7 @@ class Contacts extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final contact = contacts[index];
-                  return _ContactItem(
+                  return ContactItem(
                     contact: contact,
                     onClick: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -50,8 +57,11 @@ class Contacts extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => ContactsForm()));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ContactsForm(),
+            ),
+          );
         },
         child: Icon(Icons.add_circle_outline),
         tooltip: 'Add',
@@ -60,11 +70,11 @@ class Contacts extends StatelessWidget {
   }
 }
 
-class _ContactItem extends StatelessWidget {
+class ContactItem extends StatelessWidget {
   final Contact contact;
   final Function onClick;
 
-  const _ContactItem({
+  const ContactItem({
     Key key,
     this.contact,
     @required this.onClick,

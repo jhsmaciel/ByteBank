@@ -1,16 +1,16 @@
 import 'package:bytebanksqlite/component/InputEdit.dart';
-import 'package:bytebanksqlite/dao/ContactDAO.dart';
 import 'package:bytebanksqlite/model/Contact.dart';
 import 'package:bytebanksqlite/screen/Constants.dart';
+import 'package:bytebanksqlite/widget/AppDependecies.dart';
 import 'package:flutter/material.dart';
 
 class ContactsForm extends StatelessWidget {
   final TextEditingController _controlFullname = TextEditingController();
   final TextEditingController _controlAccountNumber = TextEditingController();
-  final ContactDAO _contactDAO = ContactDAO();
 
   @override
   Widget build(BuildContext context) {
+    final dependecies = AppDependecies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(TitleFormContacts),
@@ -34,13 +34,14 @@ class ContactsForm extends StatelessWidget {
             child: SizedBox(
               width: double.maxFinite,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
                   final String fullName = _controlFullname.text;
                   final int accountNumber =
                       int.tryParse(_controlAccountNumber.text);
                   if (fullName != null && accountNumber != null) {
                     final contact = Contact(0, fullName, accountNumber);
-                    _contactDAO.save(contact).then((id) => Navigator.pop(context));
+                    await dependecies.contactDAO.save(contact);
+                    Navigator.pop(context);
                   }
                 },
                 child: Text("Create"),

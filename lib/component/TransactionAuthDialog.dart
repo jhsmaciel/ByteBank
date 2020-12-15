@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+const TransactionAuthDialogKey = Key("TransactionAuthDialogTextFieldPassord");
+
 class TransactionAuthDialog extends StatefulWidget {
   final Function(String password) onConfirm;
+
   const TransactionAuthDialog({
     Key key,
     @required this.onConfirm,
@@ -21,6 +24,7 @@ class _TransactionAuthDialogState extends State<TransactionAuthDialog> {
     return AlertDialog(
       title: Text('Authenticate'),
       content: TextField(
+        key: TransactionAuthDialogKey,
         maxLength: 4,
         obscureText: true,
         textAlign: TextAlign.center,
@@ -31,10 +35,11 @@ class _TransactionAuthDialogState extends State<TransactionAuthDialog> {
       ),
       actions: [
         FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text("Cancelar")),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("Cancel"),
+        ),
         FlatButton(
             onPressed: () {
               widget.onConfirm(_password.text);

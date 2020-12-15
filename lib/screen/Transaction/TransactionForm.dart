@@ -6,6 +6,7 @@ import 'package:bytebanksqlite/component/TransactionAuthDialog.dart';
 import 'package:bytebanksqlite/model/Contact.dart';
 import 'package:bytebanksqlite/model/Transaction.dart';
 import 'package:bytebanksqlite/screen/Constants.dart';
+import 'package:bytebanksqlite/widget/AppDependecies.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,12 +21,12 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
-  final TransactionApi _transactionApi = TransactionApi();
   final String transactionId = Uuid().v4();
   bool _loading = false;
+
   @override
   Widget build(BuildContext context) {
-    print(transactionId);
+    final dependecies = AppDependecies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(TitleTransactionForm),
@@ -76,7 +77,7 @@ class _TransactionFormState extends State<TransactionForm> {
                           double.tryParse(_valueController.text);
                       final transactionCreated =
                           Transaction(transactionId, value, widget.contact);
-                        save(transactionCreated, context);
+                      save(dependecies.transactionApi, transactionCreated, context);
                     },
                   ),
                 ),
@@ -88,7 +89,7 @@ class _TransactionFormState extends State<TransactionForm> {
     );
   }
 
-  void save(Transaction transaction, BuildContext context) async {
+  void save(TransactionApi transactionApi, Transaction transaction, BuildContext context) async {
     showDialog(
       context: context,
       builder: (c) {
@@ -98,9 +99,8 @@ class _TransactionFormState extends State<TransactionForm> {
               setState(() {
                 _loading = true;
               });
-              await Future.delayed(Duration(seconds: 2));
               final resTransact =
-                  await _transactionApi.save(transaction, password);
+                  await transactionApi.save(transaction, password);
               if (resTransact != null) {
                 await showDialog(
                   context: context,

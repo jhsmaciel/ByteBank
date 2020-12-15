@@ -15,7 +15,6 @@ class TransactionApi {
 
   Future<Transaction> save(Transaction transaction, String password) async {
     try {
-      await Future.delayed(Duration(seconds: 20));
       final response = await httpClientWithInterceptor.post(
         basePath,
         body: jsonEncode(transaction.toJson()),
